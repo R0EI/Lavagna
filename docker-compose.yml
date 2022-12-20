@@ -7,6 +7,7 @@ services:
       - 3306:3306
     volumes:
       - ./dbdata/:/docker-entrypoint-initdb.d
+      - ./dbdata/data:/var/lib/mysql
     environment:
       - datasource.dialect=MYSQL
       - datasource.url= jdbc:mysql://mysql:3306/lavagna
@@ -14,14 +15,22 @@ services:
       - datasource.password=password
       - spring.profile.active= dev
       - MYSQL_ROOT_PASSWORD=password
+    healthcheck:
+      test: ["CMD", "mysqladmin","ping","-h","localhost"]
+      timeout: 20s
+      retries: 10
+      start_period: 30s
     
 
   app:
     build: .
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     ports:
       - 8080:8080
+
+      
 
   # mynginx:
   #   image: nginx
