@@ -12,18 +12,13 @@ services:
       - MYSQL_ROOT_PASSWORD=password
       - MYSQL_DATABASE=lavagna
       - MYSQL_CHARACTER_SET=utf8
-      - MYSQL_COLLATION=utf8_bin
-
-      
-      
+      - MYSQL_COLLATION=utf8_bin     
     healthcheck:
       test: ["CMD", "mysqladmin","ping","-h","localhost"]
       timeout: 20s
       retries: 10
       start_period: 30s
     
-    
-
   app:
     build: .
     depends_on:
@@ -36,8 +31,7 @@ services:
       - DB_PASS=password
       - SPRING_PROFILE=dev
 
-      
-
+    
   mynginx:
     image: nginx:1.23.3
     ports:
